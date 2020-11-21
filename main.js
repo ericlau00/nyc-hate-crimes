@@ -95,13 +95,16 @@ window.onload = async () => {
     let boroughs = topojson.feature(nyc, nyc.objects.boroughs);
     let borders = topojson.mesh(nyc, nyc.objects.boroughs, (a, b) => a !== b);
 
-    let projection = d3.geoMercator().fitSize([0.6 * width, 0.6 * width], boroughs);
-    let path = d3.geoPath().projection(projection);
-
     let map = d3.select("#nycmap")
         .append('svg')
-        .attr('width', 0.6 * width)
-        .attr('height', 0.6 * width)
+        .attr('width', '70%')
+        
+    let mapWidth = map._groups[0][0].clientWidth;
+
+    map.attr('height', mapWidth)
+
+    let projection = d3.geoMercator().fitSize([mapWidth, mapWidth], boroughs);
+    let path = d3.geoPath().projection(projection);
 
     map.selectAll('path')
         .data(boroughs.features)
