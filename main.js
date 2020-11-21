@@ -1,5 +1,5 @@
 window.onload = async () => {
-    let data = await d3.csv('NYPD_Hate_Crimes.csv');
+    let data = await d3.csv('data/NYPD_Hate_Crimes.csv');
 
     let lgbtMotives = [
         "ANTI-MALE HOMOSEXUAL(GAY)",
@@ -13,10 +13,6 @@ window.onload = async () => {
             data[i]["Bias Motive Description"] = "ANTI-LGBTQ+";
         }
     }
-
-    // let categories = d3.group(data, d => d['Offense Category']);
-    // let motives = d3.group(data, d => d['Bias Motive Description']);
-    // let cat = d3.rollup(data, v => v.length, d => d['Offense Category']);
 
     let mot = d3.rollup(data, v => v.length, d => d['Bias Motive Description']);
 
@@ -93,7 +89,7 @@ window.onload = async () => {
             .attr('fill-opacity', 0.7)
             .text(d => `${d.count} (${((d.endValue - d.startValue) * 100).toPrecision(3)}%)`));
 
-    let nyc = await d3.json('nyc.json');
+    let nyc = await d3.json('data/nyc.json');
     let boroughs = topojson.feature(nyc, nyc.objects.boroughs);
     let borders = topojson.mesh(nyc, nyc.objects.boroughs, (a, b) => a !== b);
 
@@ -228,13 +224,5 @@ window.onload = async () => {
         .attr('font-size', mapWidth / 50)
         .attr('font-family', 'sans-serif')
         .attr('font-weight', 'bold')
-        .text(d => d)
-
-    let descs = d3.group(data, d => d['Law Code Category Description']);
-    // console.log(descs);
-    descs.forEach((v, k) => {
-        let f = d3.rollup(v, v => v.length, d => d['Bias Motive Description']);
-
-        console.log(k, f)
-    })
+        .text(d => d);
 }
