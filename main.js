@@ -195,6 +195,16 @@ window.onload = async () => {
             .attr('fill', d => mapColorScale(d.data.name))
             .attr('d', arc)
             .attr('transform', `translate(${mapWidth / x}, ${mapWidth / y})`)
+
+        map.append('text')
+            .datum(boro.total)
+            .text(d => d)
+            .attr('transform', `translate(${mapWidth / x}, ${mapWidth / y})`)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'central')
+            .attr('font-family', 'sans-serif')
+            .attr('font-weight', 'bold')
+            .attr('font-size', (mapWidth * boro.total / total) * 0.45)
     }
 
     drawPie(bk, 1.85, 1.5);
