@@ -229,7 +229,7 @@ window.onload = async () => {
     let timedata = await d3.json('data/time.json');
     timedata.dates = timedata.dates.map(d3.timeParse("%Y-%m"))
 
-    let chartHeight = 600;
+    let chartHeight = 500;
 
     let chart = d3.select("#timeseries")
         .append('svg')
@@ -285,4 +285,23 @@ window.onload = async () => {
         .attr('stroke', d => mapColorScale(d.name))
         .style("mix-blend-mode", "multiply")
         .attr("d", d => line(d.values))
+
+    chart.selectAll('.label')
+        .data(mapDomain)
+        .enter().append('rect')
+        .attr('x', width / 1.4)
+        .attr('y', (d, i) => i * (width / 65) + (width / 10))
+        .attr('width', width / 75)
+        .attr('height', width / 75)
+        .attr('fill', d => mapColorScale(d));
+
+    chart.selectAll('.labelText')
+        .data(mapDomain)
+        .enter().append('text')
+        .attr('x', width / 1.35)
+        .attr('y', (d, i) => i * (width / 65) + (width / 9))
+        .attr('font-size', width / 75)
+        .attr('font-family', 'sans-serif')
+        .attr('font-weight', 'bold')
+        .text(d => d);
 }
