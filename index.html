@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Crimes in New York City</title>
+    <style>
+        @import url("main.css");
+    </style>
+</head>
+
+<body>
+    <main>
+        <section>
+            <header>Hate Crimes in New York City</header>
+            <hr>
+            <div>Eric Lau</div>
+            <summary>
+                <div>
+                    This is a breakdown of hate crimes committed in New York City from January 2019 to September 2020.
+                </div>
+                <div>
+                    Data was retrieved from <a
+                        href="https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78">NYC OpenData</a>.
+                </div>
+            </summary>
+        </section>
+        <section>
+            <article>
+                Out of the 377 religiously-motivated hate crimes committed since the beginning of 2019, almost 90% were anti-Semitic. When factoring in all hate crimes since 2019, anti-Semitic attacks still make up the majority. Anti-Semitic hate crimes are followed by hate crimes against the LGBTQ+ community. Most of these crimes were directed at gay men. Transgender people and lesbians were also targeted, but to a lesser extent. 
+                <div id="barstack"></div>
+                <div id="nycmap"></div>
+            </article>
+        </section>
+    </main>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3" defer></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
