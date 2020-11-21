@@ -229,20 +229,21 @@ window.onload = async () => {
     let timedata = await d3.json('data/time.json');
     timedata.dates = timedata.dates.map(d3.timeParse("%Y-%m"))
 
-    let chartHeight = 500;
-
     let chart = d3.select("#timeseries")
         .append('svg')
         .attr('width', '100%')
-        .attr('height', chartHeight)
-        .attr('viewBox', [0, 0, width, chartHeight]);
 
+    let chartWidth = chart._groups[0][0].clientWidth;
+    let chartHeight = 0.6 * chartWidth;
+
+    chart.attr('height', chartHeight)
+        .attr('viewBox', [0, 0, chartWidth, chartHeight]);
 
     let chartMargin = {top: 20, right: 20, bottom: 30, left: 30};
 
     let timex = d3.scaleUtc()
         .domain(d3.extent(timedata.dates))
-        .range([chartMargin.left, width - chartMargin.right])
+        .range([chartMargin.left, chartWidth - chartMargin.right])
 
     let y = d3.scaleLinear()
         .domain([0, d3.max(timedata.series, d => d3.max(d.values)) + 1])
@@ -250,7 +251,7 @@ window.onload = async () => {
 
     let xAxis = g => g
         .attr('transform', `translate(0, ${chartHeight - chartMargin.bottom})`)
-        .call(d3.axisBottom(timex).ticks(width / 80).tickSizeOuter(0))
+        .call(d3.axisBottom(timex).ticks(chartWidth / 80).tickSizeOuter(0))
 
     let yAxis = g => g 
         .attr('transform', `translate(${chartMargin.left}, 0)`)
@@ -289,18 +290,18 @@ window.onload = async () => {
     chart.selectAll('.label')
         .data(mapDomain)
         .enter().append('rect')
-        .attr('x', width / 1.4)
-        .attr('y', (d, i) => i * (width / 65) + (width / 10))
-        .attr('width', width / 75)
-        .attr('height', width / 75)
+        .attr('x', chartWidth / 1.4)
+        .attr('y', (d, i) => i * (chartWidth / 65) + (chartWidth / 10))
+        .attr('width', chartWidth / 75)
+        .attr('height', chartWidth / 75)
         .attr('fill', d => mapColorScale(d));
 
     chart.selectAll('.labelText')
         .data(mapDomain)
         .enter().append('text')
-        .attr('x', width / 1.35)
-        .attr('y', (d, i) => i * (width / 65) + (width / 9))
-        .attr('font-size', width / 75)
+        .attr('x', chartWidth / 1.35)
+        .attr('y', (d, i) => i * (chartWidth / 65) + (chartWidth / 9))
+        .attr('font-size', chartWidth / 75)
         .attr('font-family', 'sans-serif')
         .attr('font-weight', 'bold')
         .text(d => d);
