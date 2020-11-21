@@ -8,7 +8,7 @@ window.onload = async () => {
         "ANTI-LGBT(MIXED GROUP)"
     ];
 
-    for(let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         if (lgbtMotives.includes(data[i]["Bias Motive Description"])) {
             data[i]["Bias Motive Description"] = "ANTI-LGBTQ+";
         }
@@ -60,7 +60,7 @@ window.onload = async () => {
         .range(d3.schemeSet3);
 
     let x = d3.scaleLinear([0, 1], [0, width]);
-    
+
     bar.append('g')
         .attr('stroke', 'white')
         .selectAll('rect')
@@ -100,7 +100,7 @@ window.onload = async () => {
     let map = d3.select("#nycmap")
         .append('svg')
         .attr('width', '70%')
-        
+
     let mapWidth = map._groups[0][0].clientWidth;
 
     map.attr('height', mapWidth)
@@ -147,7 +147,7 @@ window.onload = async () => {
                 percent: s[i][1] / total * 100
             }
         }
-        
+
         return { data: s, total: total };
     }
 
@@ -156,8 +156,6 @@ window.onload = async () => {
     let qn = getBoroughData("QUEENS");
     let mn = getBoroughData("NEW YORK");
     let bx = getBoroughData("BRONX");
-
-    console.log(si, bk, qn, mn, bx);
 
     let mapDomain = [
         'ANTI-JEWISH',
@@ -231,4 +229,12 @@ window.onload = async () => {
         .attr('font-family', 'sans-serif')
         .attr('font-weight', 'bold')
         .text(d => d)
+
+    let descs = d3.group(data, d => d['Law Code Category Description']);
+    // console.log(descs);
+    descs.forEach((v, k) => {
+        let f = d3.rollup(v, v => v.length, d => d['Bias Motive Description']);
+
+        console.log(k, f)
+    })
 }
