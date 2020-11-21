@@ -34,8 +34,10 @@ end = datetime.datetime(2020, 10, 1)
 delta = datetime.timedelta(days=1)
 
 while current < end:
-    dates.append(current.strftime('%Y-%m-%d'))
-    current += delta
+    dates.append(current.strftime('%Y-%m'))
+    month = current.month 
+    while(current.month == month):
+        current += delta
 
 for m in domain:
     motives[m] = {
@@ -55,13 +57,20 @@ with open('data/NYPD_Hate_Crimes.csv') as file:
 
         recordDate = row['Record Create Date']
         date = datetime.datetime.strptime(recordDate, '%m/%d/%Y')
-        index = int((date - begin) / delta)
+        index = (date.year - 2019) * 12 + (date.month - 1)
 
         motives[motive]['values'][index] += 1
 
+series = list()
+for m in motives:
+    series.append({
+        'name': m,
+        'values': motives[m]['values']
+    })
+    
 data = {
     'y': '# hate crimes',
-    'series': motives,
+    'series': series,
     'dates': dates
 }
 

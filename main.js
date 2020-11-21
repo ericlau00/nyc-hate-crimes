@@ -225,4 +225,64 @@ window.onload = async () => {
         .attr('font-family', 'sans-serif')
         .attr('font-weight', 'bold')
         .text(d => d);
+
+    let timedata = await d3.json('data/time.json');
+    timedata.dates = timedata.dates.map(d3.timeParse("%Y-%m"))
+
+    let chartHeight = 600;
+
+    let chart = d3.select("#timeseries")
+        .append('svg')
+        .attr('width', '100%')
+        .attr('height', chartHeight)
+        .attr('viewBox', [0, 0, width, chartHeight]);
+
+
+    let chartMargin = {top: 20, right: 20, bottom: 30, left: 30};
+
+    let timex = d3.scaleUtc()
+        .domain(d3.extent(timedata.dates))
+        .range([chartMargin.left, width - chartMargin.right])
+
+    let y = d3.scaleLinear()
+        .domain([0, d3.max(timedata.series, d => d3.max(d.values)) + 1])
+        .range([chartHeight - chartMargin.bottom, chartMargin.top])
+
+    let xAxis = g => g
+        .attr('transform', `translate(0, ${chartHeight - chartMargin.bottom})`)
+        .call(d3.axisBottom(timex).ticks(width / 80).tickSizeOuter(0))
+
+    let yAxis = g => g 
+        .attr('transform', `translate(${chartMargin.left}, 0)`)
+        .call(d3.axisLeft(y).ticks(5, ',.0f'))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.select(".tick:last-of-type text").clone()
+            .attr("x", 3)
+            .attr("text-anchor", "start")
+            .attr("font-weight", "bold")
+            .text(timedata.y))
+
+    chart.append('g')
+        .call(xAxis)
+    
+    chart.append('g')
+        .call(yAxis);
+
+    let line = d3.line()
+        .curve(d3.curveMonotoneX)
+        .defined(d => !isNaN(d))
+        .x((d, i) => timex(timedata.dates[i]))
+        .y(d => y(d))
+
+    chart.append("g")
+        .attr("fill", "none")
+        .attr("stroke-width", 3)
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .selectAll("path")
+        .data(timedata.series)
+        .join("path")
+        .attr('stroke', d => mapColorScale(d.name))
+        .style("mix-blend-mode", "multiply")
+        .attr("d", d => line(d.values))
 }
